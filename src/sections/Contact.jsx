@@ -2,7 +2,15 @@ import { useState } from "react";
 import emailjs from "@emailjs/browser";
 import Alert from "../components/Alert";
 import { Particles } from "../components/Particles";
+import { Model as LostRobot } from "../components/LostRobot";
+import { Canvas } from "@react-three/fiber";
+import { Float } from "@react-three/drei";
+import { useMediaQuery } from "react-responsive";
+import { Suspense } from "react";
+import Loader from "../components/Loader";
+
 const Contact = () => {
+  const isMobile = useMediaQuery({ maxWidth: 853 });
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -60,11 +68,11 @@ const Contact = () => {
         refresh
       />
       {showAlert && <Alert type={alertType} text={alertMessage} />}
-      <div className="flex flex-col items-center justify-center max-w-md p-5 mx-auto border border-white/10 rounded-2xl bg-primary">
+      <div className="flex flex-col items-center justify-center max-w-md p-5 mx-auto ml-5 border border-white/10 rounded-2xl bg-primary">
         <div className="flex flex-col items-start w-full gap-5 mb-10">
           <h2 className="text-heading">Let's Talk</h2>
           <p className="font-normal text-neutral-400">
-            Whether you're loking to build a new website, improve your existing
+            Whether you're looking to build a new website, improve your existing
             platform, or bring a unique project to life, I'm here to help
           </p>
         </div>
@@ -126,6 +134,25 @@ const Contact = () => {
           </button>
         </form>
       </div>
+      <figure
+        className="absolute inset-0 -z-10"
+        style={{ width: "100vw", height: "100vh" }}
+      >
+        <Canvas camera={{ position: [1, 1,3] }}>
+          <Suspense fallback={<Loader />}>
+            <Float
+              speed={1.5}
+              rotationIntensity={2}
+              floatIntensity={-2}
+            >
+              <LostRobot
+                scale={isMobile ? 0.5 : 0.03}
+                position={isMobile ? [0, -1.5, 0] : [0.1, -1.0, 0]}
+              />
+            </Float>
+          </Suspense>
+        </Canvas>
+      </figure>
     </section>
   );
 };
